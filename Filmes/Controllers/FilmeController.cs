@@ -54,7 +54,6 @@ public class FilmeController : ControllerBase
     /// <response code="200">Case of success</response>
     [HttpGet]
     [ProducesResponseType(StatusCodes.Status200OK)]
-
     public List<ReadFilmeDto> RecuperaFilmes([FromQuery]int skip = 0, [FromQuery] int take = 100)
     {
         return _mapper.Map<List<ReadFilmeDto>>(_context.Filmes.Skip(skip).Take(take));

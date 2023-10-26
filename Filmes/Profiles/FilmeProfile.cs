@@ -8,13 +8,11 @@ public class FilmeProfile : Profile
 {
     public FilmeProfile()
     {
-        CreateMap<CreateFilmeDto, Filme>();
+        CreateMap<CreateFilmeDto, Filme>().ReverseMap();
         
-        CreateMap<UpdateFilmeDto, Filme>();
+        CreateMap<UpdateFilmeDto, Filme>().ReverseMap();
         
-        CreateMap<Filme, UpdateFilmeDto>();
-        
-        CreateMap<Filme, ReadFilmeDto>();
-    }
+        CreateMap<Filme, ReadFilmeDto>().ReverseMap();
 
+    }
 }
