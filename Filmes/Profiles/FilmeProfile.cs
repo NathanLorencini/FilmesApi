@@ -12,7 +12,11 @@ public class FilmeProfile : Profile
         
         CreateMap<UpdateFilmeDto, Filme>().ReverseMap();
         
-        CreateMap<Filme, ReadFilmeDto>().ReverseMap();
+        CreateMap<Filme, ReadFilmeDto>()
+            .ForMember(dto => dto.Sessoes,
+                opt
+                    => opt.MapFrom(filme => filme.Sessoes))
+            .ReverseMap();
 
     }
 }

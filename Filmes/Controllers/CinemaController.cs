@@ -49,7 +49,7 @@ namespace Filmes.Controllers
         [HttpGet]
         public List<ReadCinemaDto> GetAll()
         {
-            return _mapper.Map<List<ReadCinemaDto>>(_context.Cinemas.Include(x=> x.Endereco));
+            return _mapper.Map<List<ReadCinemaDto>>(_context.Cinemas.Include(x => x.Endereco).ToList());
         }
 
 
