@@ -3,6 +3,7 @@ using Filmes.Data;
 using Filmes.Data.Dtos;
 using Filmes.Models;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 
 namespace Filmes.Controllers
 {
@@ -22,7 +23,7 @@ namespace Filmes.Controllers
 
 
         [HttpPost]
-        public IActionResult AddCinema(CreateCinemaDto cinemaDto)
+        public IActionResult AddCinema([FromBody]CreateCinemaDto cinemaDto)
         {
             Cinema cinema = _mapper.Map<Cinema>(cinemaDto);
             _context.Cinemas.Add(cinema);
@@ -48,14 +49,14 @@ namespace Filmes.Controllers
         [HttpGet]
         public List<ReadCinemaDto> GetAll()
         {
-            return _mapper.Map<List<ReadCinemaDto>>(_context.Cinemas);
+            return _mapper.Map<List<ReadCinemaDto>>(_context.Cinemas.Include(x=> x.Endereco));
         }
 
 
         [HttpPut("{id}")]
         public IActionResult UpdateById(int id, UpdateCinemaDto updateCinemaDto)
         {
-            var cinema = GetById(id);
+            var cinema = _context.Cinemas.FirstOrDefault(x=> x.Id == id);
             
             if (cinema is null) return NotFound();
             

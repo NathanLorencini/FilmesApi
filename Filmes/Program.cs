@@ -5,12 +5,15 @@ using Microsoft.OpenApi.Models;
 
 var builder = WebApplication.CreateBuilder(args);
 
+
 var MyconnectionString = builder.Configuration.GetConnectionString("FilmeConnection");
 
 builder.Services.AddDbContext<FilmeContext>(options =>
-    options.UseSqlServer(connectionString: MyconnectionString));
+    options.UseLazyLoadingProxies().UseSqlServer(connectionString: MyconnectionString));
 
 builder.Services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
+
+
 
 // Add services to the container.
 
