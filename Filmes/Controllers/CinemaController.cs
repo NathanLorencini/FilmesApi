@@ -47,9 +47,15 @@ namespace Filmes.Controllers
 
 
         [HttpGet]
-        public List<ReadCinemaDto> GetAll()
+        public List<ReadCinemaDto> GetAll([FromQuery] int? enderecoId = null)
         {
-            return _mapper.Map<List<ReadCinemaDto>>(_context.Cinemas.Include(x => x.Endereco).ToList());
+            if (enderecoId is null)
+            {
+                _mapper.Map<List<ReadCinemaDto>>(_context.Cinemas.Include(x => x.Endereco).ToList());
+            }
+
+            return _mapper.Map<List<ReadCinemaDto>>(
+                _context.Cinemas.FromSql($"SELECT * FROM Cinemas as c WHERE c.EnderecoId ={enderecoId}").ToList());
         }
 
 

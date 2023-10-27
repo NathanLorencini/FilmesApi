@@ -32,14 +32,14 @@ public class SessaoController : ControllerBase
 
         _context.SaveChanges();
 
-        return CreatedAtAction(nameof(GetById), new { id = sessao.Id }, sessao);
+        return CreatedAtAction(nameof(GetById), new { filmeId = sessao.FilmeId, cinemaId = sessao.CinemaId}, sessao);
     }
 
 
-    [HttpGet("{id}")]
-    public IActionResult GetById(int id)
+    [HttpGet("{filmeId}/{cinemaId}")]
+    public IActionResult GetById(int filmeId, int cinemaId)
     {
-        var sessao = _context.Sessao.FirstOrDefault(x => x.Id == id);
+        var sessao = _context.Sessao.FirstOrDefault(x => x.FilmeId == filmeId && x.CinemaId == cinemaId);
 
         if (sessao is null) return NotFound();
 

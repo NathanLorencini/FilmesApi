@@ -77,6 +77,10 @@ public class EnderecoController : ControllerBase
 
         if(endereco is null) return NotFound();
 
+        _context.Remove(endereco);
+
+        _context.SaveChanges();
+
         return NoContent();
     }
 }

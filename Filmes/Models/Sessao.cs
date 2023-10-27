@@ -5,16 +5,12 @@ namespace Filmes.Models;
 
 public class Sessao
 {
-    [Key]
-    [Required]
-    public int Id { get; set; }
+    public int? FilmeId { get; set; }
 
-    [Required]
-    public int FilmeId { get; set; }
+    [ForeignKey(nameof(FilmeId))]
 
     public virtual Filme Filme { get; set; }
 
-    [Required]
     public int? CinemaId { get; set; }
 
     [ForeignKey(nameof(CinemaId))]
