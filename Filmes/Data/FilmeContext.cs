@@ -1,9 +1,10 @@
 ﻿using Filmes.Models;
+using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 
 namespace Filmes.Data;
 
-public class FilmeContext : DbContext
+public class FilmeContext : IdentityDbContext<User>
 {
     public FilmeContext(DbContextOptions<FilmeContext> options) : base(options)
     {
@@ -34,6 +35,10 @@ public class FilmeContext : DbContext
             .HasOne(endereco => endereco.Cinema)
             .WithOne(cinema => cinema.Endereco)
             .OnDelete(DeleteBehavior.Restrict);
+
+        base.OnModelCreating(modelBuilder);
+
+        modelBuilder.Entity<User>().HasKey(t => t.Id);
     }
 
 

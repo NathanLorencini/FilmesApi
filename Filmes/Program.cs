@@ -1,5 +1,10 @@
 using System.Reflection;
+using Filmes.Authorization;
 using Filmes.Data;
+using Filmes.Models;
+using Filmes.Services;
+using Microsoft.AspNetCore.DataProtection;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.OpenApi.Models;
 
@@ -11,8 +16,17 @@ var MyconnectionString = builder.Configuration.GetConnectionString("FilmeConnect
 builder.Services.AddDbContext<FilmeContext>(options =>
     options.UseLazyLoadingProxies().UseSqlServer(connectionString: MyconnectionString));
 
+builder.Services.AddIdentity<User, IdentityRole>()
+    .AddEntityFrameworkStores<FilmeContext>()
+    .AddDefaultTokenProviders();
+
+
 builder.Services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
 
+builder.Services.AddScoped<UserService>();
+builder.Services.AddScoped<TokenService>();
+
+builder.Services.AddDataProtection().PersistKeysToFileSystem(new DirectoryInfo(Path.GetTempPath()));
 
 
 // Add services to the container.
@@ -29,7 +43,8 @@ builder.Services.AddSwaggerGen(x=>
     x.IncludeXmlComments(xmlPath);
 });
 
-
+builder.Services.AddAuthorization(opts => opts.AddPolicy("MinAge", policy =>
+    policy.AddRequirements(new MinAge(18))));
 
 var app = builder.Build();
 
