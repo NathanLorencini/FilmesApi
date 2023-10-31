@@ -1,11 +1,15 @@
 using System.Reflection;
+using System.Text;
 using Filmes.Authorization;
 using Filmes.Data;
 using Filmes.Models;
 using Filmes.Services;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.DataProtection;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -23,6 +27,7 @@ builder.Services.AddIdentity<User, IdentityRole>()
 
 builder.Services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
 
+builder.Services.AddSingleton<IAuthorizationHandler, AgeAuthorization>();
 builder.Services.AddScoped<UserService>();
 builder.Services.AddScoped<TokenService>();
 
@@ -43,6 +48,22 @@ builder.Services.AddSwaggerGen(x=>
     x.IncludeXmlComments(xmlPath);
 });
 
+
+builder.Services.AddAuthentication(opts =>
+{
+    opts.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
+}).AddJwtBearer(opts =>
+{
+    opts.TokenValidationParameters = new TokenValidationParameters
+    {
+        ValidateIssuerSigningKey = true,
+        IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes("hASFD151ASDAFA98ASD54ASDA777")),
+        ValidateAudience = false,
+        ValidateIssuer = false,
+        ClockSkew = TimeSpan.Zero
+    };
+});
+
 builder.Services.AddAuthorization(opts => opts.AddPolicy("MinAge", policy =>
     policy.AddRequirements(new MinAge(18))));
 
@@ -56,6 +77,8 @@ if (app.Environment.IsDevelopment())
 }
 
 app.UseHttpsRedirection();
+
+app.UseAuthentication();
 
 app.UseAuthorization();
 
